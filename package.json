@@ -5,7 +5,8 @@
   "main": "engine.js",
   "type": "module",
   "scripts": {
-    "test": "start"
+    "test": "start",
+    "start" : "node engine.js"
   },
   "author": "Hiccup",
   "license": "ISC",
