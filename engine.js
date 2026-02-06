@@ -8,12 +8,12 @@ const config = {
   MAX_HOURS_TO_CLOSE: 4,
   MIN_PROBABILITY: 0.85,
   MAX_PROBABILITY: 0.96,
-  MIN_LIQUIDITY_USD: 10,
+  MIN_LIQUIDITY_USD: 3,
   STOP_PROB_DROP: 0.15,
   PER_MARKET_CAP: 2
 };
 
-const CYCLE_INTERVAL = 2 * 60 * 1000; // 2 minutes
+const CYCLE_INTERVAL = 60 * 60 * 1000; // 2 minutes
 
 async function cycle() {
   try {
