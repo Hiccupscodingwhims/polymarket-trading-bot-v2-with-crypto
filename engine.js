@@ -14,7 +14,8 @@ const config = {
   PER_MARKET_CAP: 2
 };
 
-const CYCLE_INTERVAL = 60 * 60 * 1000; // 1 minute
+const MONITOR_INTERVAL = 1 * 60 * 1000; // 1 minute - check stops/resolutions
+const SCAN_INTERVAL = 1 * 60 * 60 * 1000; // 1 hour - scan for new markets
 
 // HTTP endpoint
 const app = express();
@@ -52,12 +53,20 @@ app.listen(PORT, () => {
   console.log(`🌐 State endpoint: ${url}`);
 });
 
-async function cycle() {
+async function monitorCycle() {
   try {
-    console.log(`\n[${new Date().toLocaleTimeString()}] Running cycle...`);
+    await monitor(config);
+    save();
+  } catch (err) {
+    console.error('❌ Monitor error:', err.message);
+  }
+}
+
+async function scanCycle() {
+  try {
+    console.log(`\n[${new Date().toLocaleTimeString()}] Running scan cycle...`);
     console.log(`💰 Wallet: $${state.wallet.balance.toFixed(2)} | Positions: ${state.positions.length}`);
 
-    await monitor(config);
     const markets = await scan(config);
     console.log(`📊 Eligible markets: ${markets.length}`);
 
@@ -67,10 +76,9 @@ async function cycle() {
 
     save();
     
-    // Log state summary
     console.log(`📊 State: Balance=$${state.wallet.balance.toFixed(2)} | Open=${state.positions.length} | Closed=${state.closedPositions.length} | Locks=${state.eventLocks.size}`);
   } catch (err) {
-    console.error('❌ Cycle error:', err.message);
+    console.error('❌ Scan cycle error:', err.message);
   }
 }
 
@@ -85,17 +93,27 @@ try {
   process.exit(1);
 }
 
-cycle().catch(err => {
-  console.error('❌ Initial cycle failed:', err);
+// Run initial scan
+scanCycle().catch(err => {
+  console.error('❌ Initial scan failed:', err);
 });
 
+// Start monitor loop (1 minute)
 setInterval(() => {
-  cycle().catch(err => {
-    console.error('❌ Cycle failed:', err);
+  monitorCycle().catch(err => {
+    console.error('❌ Monitor cycle failed:', err);
   });
-}, CYCLE_INTERVAL);
+}, MONITOR_INTERVAL);
+
+// Start scan loop (1 hour)
+setInterval(() => {
+  scanCycle().catch(err => {
+    console.error('❌ Scan cycle failed:', err);
+  });
+}, SCAN_INTERVAL);
 
 process.stdin.resume();
 
-console.log(`⏰ Cycle interval: ${CYCLE_INTERVAL / 1000}s`);
+console.log(`⏰ Monitor interval: ${MONITOR_INTERVAL / 1000}s (stop loss checks)`);
+console.log(`⏰ Scan interval: ${SCAN_INTERVAL / 1000}s (new markets)`);
 console.log('Press Ctrl+C to stop\n');

@@ -12,12 +12,18 @@ export function execute(markets, config) {
   const allocPerMarket = Math.min(baseAlloc, PER_MARKET_CAP);
 
   for (const m of markets) {
+    // ✅ CHECK: Skip if event was already locked in this batch
+    if (state.eventLocks.has(m.eventId)) {
+      console.log(`⏭️  Skipping ${m.slug} - event ${m.eventId} already locked`);
+      continue;
+    }
+
     const price = m.bestAsk;
     const maxSize = Math.min(allocPerMarket / price, m.askSize);
     if (maxSize <= 0) continue;
 
     const cost = maxSize * price;
-    if (cost > state.wallet.balance) continue; // Safety check
+    if (cost > state.wallet.balance) continue;
 
     state.wallet.balance -= cost;
     
