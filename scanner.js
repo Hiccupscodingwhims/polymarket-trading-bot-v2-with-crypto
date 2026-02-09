@@ -247,8 +247,7 @@ function shouldSkipMarket(slug) {
 
   // hyphen-tight abbreviation matcher
   // matches: -abbr-, -abbr, abbr-
-  const abbrRegex = /(?:^|-)(?:tien|lps|usa|partiz|oak|gauff|pain|col|190e|wca|jng|ajp|djere|afg|voc|akt1|crv1|gl|ydn1|gl1|svj|hood|syd|omega1|eer|mot|tac|wes|drg|z101|syd1|nyl|ie|mia|lbvc|faze|sabalen|invict1|vae|ske|lul|hv|not|hnames|b5|mile|ungd|juv|gh|sawangk|eng|ham|som|car|cfc1|glo|ad|ess|lei|kitcat|war|erie|mid|dep|wor|dur|67|ken|nor|mnm|yor|tty|eiq|cgaa|ivanov|sevasto|n5r|qlm|omit|ov|2mr|rad|202|rej|vvv|fro|lek|yak|par|sus|dv1|lan|der|ep3|min|sur|gla|vachero|haz|pt3|rscnj|ytigeres|psbev|clu|ober|prizmic|a1|hon|newgro|b2|win2|sas|kom|vit|spa|sou|din|dea|tor|pbks|uola|qat|bel|bar|ava|ska|sha|lin|roe|fae|los|ee1|ran|hig|basavar|joh|iusb|sfu|for|cha|gg3|cs1|tse|ben|khu|a2|nep|b1|ces|wss|ros|loyolo)(?:-|$)/;
-
+  const abbrRegex = /(?:^|-)(?:atp|lol|csgo|dota2|mlb|wta|per1|test|uel|cbb|abb|cehl|odi|wnba|shl|bnd|itc|cdr|valorant|codmw|ere|crint|khl|ipl|ahl|bpl|scop|dehl|crnew|cpl|t20|csa|tur|epl|she|crind|ecc|rl|craus|r6siege|eth|mlbb|bl2|cze1)(?:-|$)/;
   return abbrRegex.test(s);
 }
 
