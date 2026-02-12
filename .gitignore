@@ -2,3 +2,4 @@
 .env
 trades.csv
 state.json 
+./everydayResults/

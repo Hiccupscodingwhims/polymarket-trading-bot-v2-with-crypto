@@ -103,7 +103,8 @@ function checkStopLossForToken(tokenId, bids, config) {
   const priceDrop = (position.entryPrice - bestBid) / position.entryPrice;
 
   if (priceDrop >= config.STOP_PRICE_DROP) {
-    executeStopLoss(position, bestBid);
+    console.log("Stop loss would have triggered for", position.slug, `| Entry: ${position.entryPrice.toFixed(3)} | Best Bid: ${bestBid.toFixed(3)} | Drop: ${(priceDrop * 100).toFixed(2)}%`);
+    // executeStopLoss(position, bestBid);
   }
 }
 
