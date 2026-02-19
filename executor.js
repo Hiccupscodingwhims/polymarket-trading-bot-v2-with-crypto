@@ -1,6 +1,5 @@
 // executor.js
 import { state, addPosition, save } from './state.js';
-import { subscribePosition } from './websocket.js';
 
 export function execute(markets, config) {
   const { TOTAL_BUDGET, PER_MARKET_CAP } = config;
@@ -10,13 +9,16 @@ export function execute(markets, config) {
   if (N === 0 || W <= 0) return;
 
   const baseAlloc = W / N;
-  const allocPerMarket = Math.min(baseAlloc, PER_MARKET_CAP);
 
   for (const m of markets) {
     if (state.eventLocks.has(m.eventId)) {
       console.log(`⏭️  Skipping ${m.slug} - event ${m.eventId} already locked`);
       continue;
     }
+
+    // Apply crypto market discount: 20% of normal allocation
+    const marketCap = m.isCrypto ? PER_MARKET_CAP * 0.20 : PER_MARKET_CAP;
+    const allocPerMarket = Math.min(baseAlloc, marketCap);
 
     const price = m.bestAsk;
     const maxSize = Math.min(allocPerMarket / price, m.askSize);
@@ -40,10 +42,8 @@ export function execute(markets, config) {
       boughtAt: new Date().toISOString()
     });
 
-    // Subscribe to WebSocket for real-time stop loss
-    subscribePosition(m.tokenId);
-
-    console.log(`✅ BUY ${m.slug} ${m.side} @ ${price} | Size: ${maxSize.toFixed(2)} | Cost: $${cost.toFixed(2)}`);
+    const marketType = m.isCrypto ? '💰' : '📊';
+    console.log(`✅ BUY ${marketType} ${m.slug} ${m.side} @ ${price} | Size: ${maxSize.toFixed(2)} | Cost: $${cost.toFixed(2)}`);
   }
 
   save();

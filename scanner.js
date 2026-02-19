@@ -223,7 +223,8 @@ async function checkMarket(job, config) {
           bestAsk,
           askSize: size,
           hoursToClose: hrs,
-          endDate: market.endDate
+          endDate: market.endDate,
+          isCrypto: isCryptoMarket(m.slug)
         },
         filters
       };
@@ -237,6 +238,11 @@ async function checkMarket(job, config) {
   }
 }
 
+function isCryptoMarket(slug) {
+  const s = slug.toLowerCase();
+  return /btc|eth|sol|xrp|bitcoin|ethereum|solana|ripple/.test(s);
+}
+
 function shouldSkipMarket(slug) {
   const s = slug.toLowerCase();
 
@@ -247,7 +253,7 @@ function shouldSkipMarket(slug) {
 
   // hyphen-tight abbreviation matcher
   // matches: -abbr-, -abbr, abbr-
-  const abbrRegex = /(?:^|-)(?:ncaab|epl|btc|eth|sol|xrp|bitcoin|ethereum|solana|ripple|lal|acn|ipl|wnba|bun|mlb|cfb|nfl|fl1|sea|ucl|afc|ofc|fif|ere|arg|itc|mex|lcs|lib|sud|tur|con|cof|uef|caf|rus|efa|efl|nba|nhl|uel|dota2|lol|odi|t20|abb|csa|atp|wta|mls|val|cs2|cwbb|mma|cdr|mlbb|ow|crban|codmw|fifa|rutopft|pubg|r6siege|rl|bkligend|bknbl|col|cde|dfb|bra|jap|ja2|kor|spl|chi|aus|ind|nor|den|por|test|she|sasa|lpl|psp|kbo|shl|cehl|dehl|snhl|khl|ahl|crint|cbb|craus|creng|crnew|crind|crsou|crpak|cruae|hok|wildrift|sc2|sc|ruprem|ssc|bkcl|bkseriea|bkcba|bkfr1|bkarg|bkkbl|rusixnat|rueuchamp|ruurc|rusrp|ruchamp|cru19wc|crwpl20|crwncl|crwt20wcgq|crafgwi20|crbtnmlyhkg20|zuffa|mar1|egy1|cze1|bol1|rou1|mwoh|bra2|per1|wwoh|col1|chi1)(?:-|$)/;  
+  const abbrRegex = /(?:^|-)(?:ncaab|temperature|epl|btc|eth|sol|xrp|bitcoin|ethereum|solana|ripple|lal|acn|ipl|wnba|bun|mlb|cfb|nfl|fl1|sea|ucl|afc|ofc|fif|ere|arg|itc|mex|lcs|lib|sud|tur|con|cof|uef|caf|rus|efa|efl|nba|nhl|uel|dota2|lol|odi|t20|abb|csa|atp|wta|mls|val|cs2|cwbb|mma|cdr|mlbb|ow|crban|codmw|fifa|rutopft|pubg|r6siege|rl|bkligend|bknbl|col|cde|dfb|bra|jap|ja2|kor|spl|chi|aus|ind|nor|den|por|test|she|sasa|lpl|psp|kbo|shl|cehl|dehl|snhl|khl|ahl|crint|cbb|craus|creng|crnew|crind|crsou|crpak|cruae|hok|wildrift|sc2|sc|ruprem|ssc|bkcl|bkseriea|bkcba|bkfr1|bkarg|bkkbl|rusixnat|rueuchamp|ruurc|rusrp|ruchamp|cru19wc|crwpl20|crwncl|crwt20wcgq|crafgwi20|crbtnmlyhkg20|zuffa|mar1|egy1|cze1|bol1|rou1|mwoh|bra2|per1|wwoh|col1|chi1)(?:-|$)/;  
   return abbrRegex.test(s);
 }
 
